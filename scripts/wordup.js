@@ -77,10 +77,11 @@ function addNewWordSubmission(word) {
  */
 function checkIfWordIsReal(word) {
 
+    
     // make an AJAX call to the Pearson API
     $.ajax({
         // TODO 13 what should the url be?
-        url: "www.http://api.pearson.com/v2/dictionaries/lasde/entries?headword=" + word,
+        url: "http://api.pearson.com/v2/dictionaries/lasde/entries?headword=" + word,
         success: function(response) {
             console.log("We received a response from Pearson!");
 
@@ -91,7 +92,7 @@ function checkIfWordIsReal(word) {
             // Replace the 'true' below.
             // If the response contains any results, then the word is legitimate.
             // Otherwise, it is not.
-            var theAnswer = true;
+            var theAnswer = false;
             if (response.results.length > 0) {
                 theAnswer = true;
             }
@@ -143,10 +144,12 @@ function render() {
     $("#word-submissions").empty();
     // TODO 10
     // Add a few things to the above code block (underneath "// clear stuff").
-    $('#textbox').removeClass('bad-attempt');
+    $('#textbox')
+        .removeClass('bad-attempt')
+        .attr('disabled', false);
     //clear is letter not allowed
     $('.disallowed-letter').remove();
-    $('#textbox').attr('disabled', false);
+
 
     // reveal the #game container
     $("#game").show();
@@ -221,22 +224,30 @@ function wordSubmissionChip(wordSubmission) {
 
     // if we know the status of this word (real word or not), then add a green score or red X
     if (wordSubmission.hasOwnProperty("isRealWord")) {
-        var scoreChip = $("<span></span>").text("⟐");
+        //var scoreChip = $("<span></span>").text("⟐");
         // TODO 17
         // give the scoreChip appropriate text content
-        var score = wordScore(wordSubmission.word);
-        scoreChip.text(score).attr("class", "tag tag-sim bg-primary)");
+        if (wordSubmission.isRealWord == true) {
+        var scoreValue = wordScore(wordSubmission.word);
+        var scoreChip = $("<span></span>")
+            .text(scoreValue)
+            .attr("class", "tag tag-sm bg-primary)");
+    
         // TODO 18
         // give the scoreChip appropriate css classes
-        if (wordSubmission.isRealWord == false) {
-            scoreChip.text('X').attr("class", "tag tag-sm bg-danger");
-        };
+        } else {
+            var invalidWord = "X"
+            var scoreChip = $("<span></span>")
+                .text(invalidWord)
+                .attr("class", "tag tag-sm bd-danger");
+        }
+    
         // TODO 16
         // append scoreChip into wordChip
-        wordChip.append(scoreChip);
+        return wordChip.append(scoreChip);
     }
 
-    return wordChip;
+    //return wordChip;
 }
 
 /**
@@ -364,9 +375,17 @@ function wordScore(word) {
     // TODO 19
     // Replace the empty list below.
     // Map the list of letters into a list of scores, one for each letter.
-    var letterScores = letters.map(function(letter) {
-        return letterScore(letter);
-    });
+    // var letterScores = letters.map(function(letter) {
+    //     return letterScore(letter);
+    // });
+
+    // var letterScores = [];
+    // for (i = 0; i < letters.length; i++) {
+    //     individualLetterScore = letterScore(letters[i]);
+    //     letterScores.push(individualLetterScore);
+    // } 
+
+    var letterScores = $.map(letters, letterScore);
 
     // return the total sum of the letter scores
     return letterScores.reduce(add, 0);
@@ -395,6 +414,7 @@ function currentScore() {
         total += wordScores[i];
     }
     return total;
+    //return wordScores.reduce(add, 0)
 }
 
 
