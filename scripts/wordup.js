@@ -223,31 +223,31 @@ function wordSubmissionChip(wordSubmission) {
         .attr("class", "tag tag-lg word-submission");
 
     // if we know the status of this word (real word or not), then add a green score or red X
-    if (wordSubmission.hasOwnProperty("isRealWord")) {
+    if (wordSubmission.isRealWord == true) {
         //var scoreChip = $("<span></span>").text("⟐");
         // TODO 17
         // give the scoreChip appropriate text content
-        if (wordSubmission.isRealWord == true) {
-        var scoreValue = wordScore(wordSubmission.word);
         var scoreChip = $("<span></span>")
-            .text(scoreValue)
-            .attr("class", "tag tag-sm bg-primary)");
-    
-        // TODO 18
-        // give the scoreChip appropriate css classes
-        } else {
-            var invalidWord = "X"
-            var scoreChip = $("<span></span>")
-                .text(invalidWord)
-                .attr("class", "tag tag-sm bd-danger");
-        }
-    
-        // TODO 16
-        // append scoreChip into wordChip
-        return wordChip.append(scoreChip);
+            .text(wordScore(wordSubmission.word))
+            .attr("class", "tag  tag-sm bg-primary")
+        
+        var wordChip = wordChip.append(" ", scoreChip)
     }
 
-    //return wordChip;
+    else {
+        var scoreChip = $("<span></span>")
+            .text("X")
+            .attr("class", "tag  tag-sm bg-danger")
+        
+        // TODO 18
+        // give the scoreChip appropriate css classes
+       
+        // TODO 16
+        // append scoreChip into wordChip
+        var wordChip = wordChip.append(" ", scoreChip)
+    }
+
+    return wordChip;
 }
 
 /**
