@@ -164,10 +164,12 @@ function render() {
     $("#word-submissions").append(wordChips);
 
     // Set the value of the textbox
-    $("#textbox").val(model.currentAttempt);
+    $("#textbox")
+        .val(model.currentAttempt)
+        .focus()
     // TODO 3
     // Give focus to the textbox.
-    $("textbox").focus();
+    //$("textbox").focus();
 
     // if the current word attempt contains disallowed letters,
     var disallowedLetters = disallowedLettersInWord(model.currentAttempt);
